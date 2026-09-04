@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #E8F5EE;
+    color: #17211B;
+    @apply antialiased font-sans;
+  }
+
+  /* Universal Orange Accent for All Native Form Controls */
+  input[type="radio"],
+  input[type="checkbox"],
+  input[type="range"] {
+    accent-color: #FF6B00;
+  }
+}
+
+/* Custom modern scrollbar for desktop */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E8F5EE;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a3d9b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2E8B57;
+}
+
+/* Hide scrollbars on category bars and carousel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

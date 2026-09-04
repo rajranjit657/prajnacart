@@ -1,0 +1,28 @@
+{
+  "name": "prajnacart-marketplace",
+  "version": "1.0.0",
+  "description": "Prajnacart - Production Full-Stack Flipkart-Style Multi-Vendor E-Commerce Platform",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "test": "npm run test --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "ecommerce",
+    "marketplace",
+    "react",
+    "express",
+    "postgresql",
+    "razorpay",
+    "typescript",
+    "prajnacart"
+  ],
+  "author": "Prajnacart Team",
+  "license": "MIT"
+}
