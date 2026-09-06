@@ -7,6 +7,7 @@ export interface User {
   phone?: string;
   role: UserRole;
   isActive: boolean;
+  slug?: string;
   isEmailVerified: boolean;
   avatarUrl?: string;
   createdAt: string;
@@ -66,7 +67,13 @@ export interface Seller {
   createdAt: string;
   updatedAt: string;
 }
-
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  isFeatured: boolean;
+  createdAt: string;
+}
 export interface Category {
   id: string;
   name: string;
@@ -118,6 +125,7 @@ export interface Product {
   id: string;
   title: string;
   slug: string;
+  slugBackup?: string;
   sku: string;
   shortDescription?: string;
   description: string;
@@ -241,6 +249,7 @@ export interface Review {
   title?: string;
   comment: string;
   isVerifiedPurchase: boolean;
+  isApproved?: boolean;
   helpfulVotes: number;
   images?: string[];
   createdAt: string;

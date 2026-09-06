@@ -7,7 +7,7 @@ export const getProductReviews = async (req: Request, res: Response) => {
   const { productId } = req.params;
 
   const reviews = dbStore.reviews
-    .filter(r => r.productId === productId && r.isApproved)
+    .filter(r => r.productId === productId && r.isApproved !== false)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   // Compute breakdown
