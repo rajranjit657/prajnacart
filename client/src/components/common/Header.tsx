@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, ShoppingCart, Heart, User as UserIcon, LogOut, 
@@ -75,63 +75,6 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-[#affcff] border-b border-[#9eeef2] shadow-xs transition-all">
-      {/* 1. TOP DEMO MODE BAR */}
-      {isDemoBarOpen && (
-        <div className="bg-[#003B24] text-white text-xs py-2 px-4 sm:px-6 flex flex-wrap items-center justify-between border-b border-[#002a1a]">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span className="bg-[#2874F0] text-white px-2.5 py-0.5 rounded font-extrabold text-[11px] tracking-wider uppercase shadow-xs">
-              DEMO MODE
-            </span>
-            <span className="text-gray-200 text-xs hidden md:inline font-medium">
-              Full marketplace simulation active. Test with 1-click accounts:
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => quickLogin('customer')}
-              className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-colors ${
-                user?.role === 'customer' 
-                  ? 'bg-purple-700 text-white font-bold' 
-                  : 'bg-[#1b4332] hover:bg-[#2d6a4f] text-gray-200'
-              }`}
-            >
-              <UserIcon size={12} className="text-purple-300" /> Customer
-            </button>
-
-            <button
-              onClick={() => quickLogin('seller')}
-              className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-colors ${
-                user?.role === 'seller' 
-                  ? 'bg-[#2874F0] text-white font-bold' 
-                  : 'bg-[#2874F0]/90 hover:bg-[#2874F0] text-white'
-              }`}
-            >
-              <Store size={12} className="text-blue-100" /> Seller
-            </button>
-
-            <button
-              onClick={() => quickLogin('admin')}
-              className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-colors ${
-                user?.role === 'admin' 
-                  ? 'bg-[#FF6B00] text-white font-bold ring-2 ring-white/40' 
-                  : 'bg-[#FF6B00] hover:bg-[#e85d00] text-white font-bold shadow-xs'
-              }`}
-            >
-              <Shield size={12} className="text-yellow-200" /> Admin
-            </button>
-
-            <button
-              onClick={() => setIsDemoBarOpen(false)}
-              className="text-gray-400 hover:text-white ml-2 p-0.5"
-              title="Close Demo Bar"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* 2. MAIN LIGHT CYAN HEADER (#affcff) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4">
         <div className="flex items-center justify-between gap-3 sm:gap-6">
@@ -206,7 +149,7 @@ export const Header: React.FC = () => {
                     </div>
                     <div className="text-right">
                       <span className="text-sm font-bold text-gray-900">
-                        ₹{item.price.toLocaleString('en-IN')}
+                        â‚¹{item.price.toLocaleString('en-IN')}
                       </span>
                     </div>
                   </button>
@@ -401,3 +344,5 @@ export const Header: React.FC = () => {
     </header>
   );
 };
+
+
