@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Lock, Mail, ArrowRight, ShieldCheck, Sparkles, User, Store, Shield } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useCartStore } from '../store/cartStore';
 
@@ -9,7 +9,7 @@ export const LoginPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
 
-  const { login, quickLogin, isLoading } = useAuthStore();
+  const { login, isLoading } = useAuthStore();
   const { syncGuestCart } = useCartStore();
 
   const [email, setEmail] = useState('');
@@ -24,15 +24,6 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleQuickDemoLogin = async (role: 'customer' | 'seller' | 'admin') => {
-    const success = await quickLogin(role);
-    if (success) {
-      await syncGuestCart();
-      if (role === 'seller') navigate('/seller');
-      else if (role === 'admin') navigate('/admin');
-      else navigate(redirect);
-    }
-  };
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
@@ -68,39 +59,10 @@ export const LoginPage: React.FC = () => {
           <div>
             <h1 className="text-xl font-bold text-gray-900">Sign in to your account</h1>
             <p className="text-xs text-gray-500 mt-1">
-              Enter your credentials or choose a quick 1-click demo role below.
+              Enter your credentials to sign in to your account.
             </p>
           </div>
 
-          {/* 1-Click Quick Demo Login Buttons */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3.5 space-y-2">
-            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-              ⚡ Instant 1-Click Demo Login:
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin('customer')}
-                className="flex items-center justify-center gap-1.5 py-2 px-2 bg-white hover:bg-orange-50 text-gray-800 hover:text-novaorange-600 font-bold text-xs rounded border border-gray-300 shadow-xs transition-colors"
-              >
-                <User size={13} /> Customer
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin('seller')}
-                className="flex items-center justify-center gap-1.5 py-2 px-2 bg-white hover:bg-orange-50 text-gray-800 hover:text-novaorange-600 font-bold text-xs rounded border border-gray-300 shadow-xs transition-colors"
-              >
-                <Store size={13} /> Seller
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin('admin')}
-                className="flex items-center justify-center gap-1.5 py-2 px-2 bg-white hover:bg-orange-50 text-gray-800 hover:text-novaorange-600 font-bold text-xs rounded border border-gray-300 shadow-xs transition-colors"
-              >
-                <Shield size={13} /> Admin
-              </button>
-            </div>
-          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div>
@@ -129,7 +91,7 @@ export const LoginPage: React.FC = () => {
                 <input
                   type="password"
                   required
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded outline-none focus:border-novaorange-500 font-medium"
@@ -166,3 +128,4 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
+
