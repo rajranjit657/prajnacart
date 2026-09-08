@@ -26,14 +26,19 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const CLIENT_URL = process.env.CLIENT_URL || 'https://prajnacart.vercel.app';
 
 // Security & Middlewares
 app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
 app.use(cors({
-  origin: [CLIENT_URL, 'http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: [
+    CLIENT_URL,
+    'https://prajnacart.vercel.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+  ],
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
