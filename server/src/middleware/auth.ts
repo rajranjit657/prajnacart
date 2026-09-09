@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { dbStore } from '../db/index.js';
+import { pool } from '../db/index.js';
 import { UserRole } from '../types/index.js';
 
 export interface AuthenticatedRequest extends Request {
@@ -11,73 +11,130 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'prajnacart_super_secret_jwt_key_2026_production_grade';
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  'prajnacart_super_secret_jwt_key_2026_production_grade';
 
-export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+type JwtPayload = {
+  id: string;
+  email: string;
+  role: UserRole;
+};
+
+export const authenticate = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({
       success: false,
-      message: 'Authentication token required. Please sign in to continue.',
+      message:
+        'Authentication token required. Please sign in to continue.',
     });
   }
 
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: UserRole };
-    
-    // Check if user still exists and is active
-    const user = dbStore.users.find(u => u.id === decoded.id && u.isActive);
-    if (!user) {
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+
+    const result = await pool.query(
+      `
+      SELECT
+        id,
+        email,
+        role,
+        is_active
+      FROM users
+      WHERE id = $1
+      LIMIT 1
+      `,
+      [decoded.id]
+    );
+
+    const user = result.rows[0];
+
+    if (!user || !user.is_active) {
       return res.status(401).json({
         success: false,
-        message: 'User session is invalid or user has been deactivated.',
+        message:
+          'User session is invalid or user has been deactivated.',
       });
     }
 
     req.user = {
       id: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role as UserRole,
     };
 
     next();
   } catch (err: any) {
+    console.error('Authentication error:', err.message);
+
     return res.status(401).json({
       success: false,
-      message: 'Invalid or expired authentication token. Please sign in again.',
+      message:
+        'Invalid or expired authentication token. Please sign in again.',
     });
   }
 };
 
-// Optional authentication for guest checkout or reading public pages
-export const optionalAuth = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const optionalAuth = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const authHeader = req.headers.authorization;
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return next();
   }
 
   const token = authHeader.split(' ')[1];
+
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: UserRole };
-    const user = dbStore.users.find(u => u.id === decoded.id && u.isActive);
-    if (user) {
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+
+    const result = await pool.query(
+      `
+      SELECT
+        id,
+        email,
+        role,
+        is_active
+      FROM users
+      WHERE id = $1
+      LIMIT 1
+      `,
+      [decoded.id]
+    );
+
+    const user = result.rows[0];
+
+    if (user && user.is_active) {
       req.user = {
         id: user.id,
         email: user.email,
-        role: user.role,
+        role: user.role as UserRole,
       };
     }
   } catch {
-    // Ignore invalid optional tokens
+    // Ignore invalid optional tokens.
   }
+
   next();
 };
 
 export const authorizeRoles = (...roles: UserRole[]) => {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  return (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
@@ -88,7 +145,9 @@ export const authorizeRoles = (...roles: UserRole[]) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `Forbidden: Access restricted to [${roles.join(', ')}]. Your role is '${req.user.role}'.`,
+        message: `Forbidden: Access restricted to [${roles.join(
+          ', '
+        )}]. Your role is '${req.user.role}'.`,
       });
     }
 
