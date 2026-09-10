@@ -72,7 +72,7 @@ export const addToCart = async (req: AuthenticatedRequest, res: Response) => {
   const qtyToAdd = Math.max(1, parseInt(quantity, 10) || 1);
 
   // Validate stock
-  const stockCheck = checkStockAvailability(productId, variantId, qtyToAdd);
+  const stockCheck = await checkStockAvailability(productId, variantId, qtyToAdd);
   if (!stockCheck.isAvailable) {
     return res.status(400).json({
       success: false,
@@ -88,7 +88,7 @@ export const addToCart = async (req: AuthenticatedRequest, res: Response) => {
   if (existingIndex > -1) {
     const existing = dbStore.cartItems[existingIndex];
     const newQty = existing.quantity + qtyToAdd;
-    const totalStockCheck = checkStockAvailability(productId, variantId, newQty);
+    const totalStockCheck = await checkStockAvailability(productId, variantId, newQty);
     if (!totalStockCheck.isAvailable) {
       return res.status(400).json({
         success: false,
@@ -130,7 +130,11 @@ export const updateCartItem = async (req: AuthenticatedRequest, res: Response) =
     return getCart(req, res);
   }
 
-  const stockCheck = checkStockAvailability(cartItem.productId, cartItem.variantId, targetQty);
+  const stockCheck = await checkStockAvailability(
+  cartItem.productId,
+  cartItem.variantId,
+  targetQty
+);
   if (!stockCheck.isAvailable) {
     return res.status(400).json({
       success: false,

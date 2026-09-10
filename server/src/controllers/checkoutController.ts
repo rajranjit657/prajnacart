@@ -41,7 +41,11 @@ export const validateCheckout = async (req: AuthenticatedRequest, res: Response)
     const requestedQty = Math.max(1, parseInt(item.quantity, 10) || 1);
 
     // Stock check
-    const stockCheck = checkStockAvailability(product.id, item.variantId, requestedQty);
+    const stockCheck = await checkStockAvailability(
+  product.id,
+  item.variantId,
+  requestedQty
+);
     if (!stockCheck.isAvailable) {
       return res.status(400).json({
         success: false,
